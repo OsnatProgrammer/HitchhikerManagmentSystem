@@ -6,7 +6,7 @@ main().catch(err => console.log(err));
 
 async function main() {
     mongoose.set('strictQuery', false);
-    await mongoose.connect(`mongodb+srv://${config.userDB}:${config.passDB}@cluster0.auqwmqm.mongodb.net/black23`);
-    console.log("mongo conect");
+    await mongoose.connect(`mongodb+srv://${config.userDB}:${config.passDB}@cluster0.pa1epkq.mongodb.net/HitchhikerManagmentSystem`);
+    console.log("mongo connect HitchhikerManagmentSystem");
 }
     // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
