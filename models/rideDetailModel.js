@@ -10,7 +10,7 @@ const rideDetailsSchema = new mongoose.Schema({
     status:{type:Number, default:0}
 })
 
-exports.rideDetailsSchema = mongoose.model("rideDetails", rideDetailsSchema);
+exports.RideDetailsModel = mongoose.model("rideDetails", rideDetailsSchema);
 
 exports.validateRideDetails = (_reqBody) => {
     let schemaJoi = Joi.object({
