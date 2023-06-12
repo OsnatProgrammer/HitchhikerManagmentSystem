@@ -1,8 +1,11 @@
-express = require("express");
-const bcrypt = require("bcrypt");
-const { auth,authAdmin } = require("../middlewares/auth");
-const { RideDetailsModel, validateRideDetails } = require("../models/rideDetailsModel")
+
+const express = require("express");
 const router = express.Router();
+// const bcrypt = require("bcrypt");
+const { auth, authAdmin } = require("../middlewares/auth");
+const { RideDetailsModel, validateRideDetails } = require("../models/rideDetailModel")
+
+
 
 
 
@@ -47,17 +50,18 @@ router.get("getRideDetailsById/:id", async (req, res) => {
 
 //קבלת כל פרטי הנסיעות באמצעות טוקן של מנהל
 // http://localhost:3000/rideDetails/getRideDetailsList    -> send only admin token  
-router.get("/getRideDetailsList", authAdmin, async (req, res) => {
+router.get("getRideDetailsList", async (req, res) => {
     try {
         let data = await RideDetailsModel.find({});
-        res.json(data)
-
-    }
-    catch (err) {
+        if (!data) {
+            return res.json({ msg: "There is no match rides in our database" });
+        }
+        res.json(data);
+    } catch (err) {
         console.log(err);
         res.status(500).json({ msg: "err", err })
     }
-})
+});
 
 // http://localhost:3000/addRideDetails    -> send token admin or user
 router.post("/addRideDetails", auth, async (req, res) => {
@@ -176,4 +180,4 @@ router.delete("/deleteRidedetails/:idDel", auth, async (req, res) => {
 //     }
 // })
 
-module.exports = router
+module.exports = router;

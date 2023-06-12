@@ -1,5 +1,5 @@
 const indexR = require("./index")
-// const userR = require("./user")
+const userR = require("./user")
 const rideOffersR = require("./rideOffers")
 const rideRequestsR = require("./rideRequests")
 const rideDetailsR = require("./rideDetails")
@@ -9,7 +9,7 @@ const rideDetailsR = require("./rideDetails")
 
 exports.routesInit = (app) => {
     app.use("/", indexR);
-    // app.use("/user", userR);
+    app.use("/users", userR);
     app.use("/rideOffers", rideOffersR);
     app.use("/rideRequests", rideRequestsR);
     app.use("/rideDetails", rideDetailsR);
