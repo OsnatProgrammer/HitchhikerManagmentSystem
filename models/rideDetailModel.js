@@ -16,10 +16,14 @@ exports.validateRideDetails = (_reqBody) => {
     let schemaJoi = Joi.object({
         departure_address: Joi.string().min(5).max(200).required(),
         destination_address: Joi.string().min(5).max(200).required(),
-        departure_time: Joi.Date().required(),
+        // departure_time: Joi.string().required(),
+        departure_time: Joi.date().required(),
         emptySeatNum: Joi.number().min(1).max(20).required(),
         status: Joi.number().min(0).max(2).required()
     })
+
+
+      
     return schemaJoi.validate(_reqBody)
 }
 
