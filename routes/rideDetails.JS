@@ -63,8 +63,9 @@ router.get("getRideDetailsList", async (req, res) => {
     }
 });
 
-// http://localhost:3000/addRideDetails    -> send token admin or user
-router.post("/addRideDetails", auth, async (req, res) => {
+// http://localhost:3000/rideDetails/addRideDetails    -> send token admin or user
+// router.post("/addRideDetails", auth, async (req, res) => {
+router.post("/addRideDetails", async (req, res) => {
     let validateBody = validateRideDetails(req.body);
     if (validateBody.error) {
         return res.status(400).json(validateBody.error.details)
