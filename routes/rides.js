@@ -2,7 +2,6 @@
 const express = require("express");
 const { RideModel } = require("../models/rideModel");
 const { authadmin } = require("../middlewares/auth");
-const { RideRequestModel } = require("../models/rideRequestModel");
 const router = express.Router();
 
 // http://localhost:3000/rides
@@ -116,21 +115,6 @@ router.get("/getAllRides", async (req, res) => {
     res.status(500).json({ msg: "Error", err });
   }
 });
-
-// work
-// http://localhost:3000/rides/addRide 
-router.post("/addRide", async (req, res) => {
-
-  try {
-      let ride = new RideModel(req.body);
-      await ride.save();
-      res.status(201).json(ride)
-  }
-  catch (err) {
-      console.log(err)
-      res.status(500).json({ msg: "err", err })
-  }
-})
 
 module.exports = router;
 
