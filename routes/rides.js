@@ -1,4 +1,3 @@
-
 const express = require("express");
 const { RideModel } = require("../models/rideModel");
 const { authadmin } = require("../middlewares/auth");
@@ -110,6 +109,3 @@ router.get("/", async (req, res) => {
 });
 
 module.exports = router;
-
-
-

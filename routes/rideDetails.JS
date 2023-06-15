@@ -73,7 +73,7 @@ router.post("/addRideDetails", auth, async (req, res) => {
         let rideDetails = new RideDetailsModel(req.body);
         // toy.user_id = req.tokenData._id;
         await rideDetails.save();
-        res.status(201).json(toy)
+        res.status(201).json(rideDetails)
     }
     catch (err) {
         console.log(err)

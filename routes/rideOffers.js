@@ -1,7 +1,68 @@
 const express = require("express");
 const { RideOfferModel } = require("../models/rideOfferModel");
 const { auth } = require("../middlewares/auth");
+const { RideModel } = require("../models/rideModel");
+const { UserModel } = require("../models/userModel");
 const router = express.Router();
+
+// // http://localhost:3000/rideOffers
+// router.get("/", async (req, res) => {
+//     let sort = req.query.sort || "_id";
+//     let reverse = req.query.reverse == "yes" ? -1 : 1;
+
+//     try {
+//         let rides = await RideModel.aggregate([
+//             {
+//                 // טבלת rideOffers
+//                 $lookup: {
+//                     from: "rideOffers",
+//                     localField: "rideOffer_id",
+//                     foreignField: "_id",
+//                     as: "rideOffer",
+//                 },
+//             },
+//             {
+//                 // טבלת rideRequests
+//                 $lookup: {
+//                     from: "rideRequests",
+//                     localField: "rideRequest_id",
+//                     foreignField: "_id",
+//                     as: "rideRequest",
+//                 },
+//             },
+//             {
+//                 // טבלת users
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "rideOffer.user_id",
+//                     foreignField: "_id",
+//                     as: "user",
+//                 },
+//             },
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     rideOffer_id: "$rideOffer._id",
+//                     rideRequest_id: "$rideRequest._id",
+//                     userName: "$user.name",
+//                 },
+//             },
+//             {
+//                 $sort: { [sort]: reverse },
+//             },
+//         ]);
+
+//         res.json(rides);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({ msg: "Error", err });
+//     }
+// });
+
+
+
+
+
 
 
 //למערך ובצד לקוח לשלוף ספציפי יותר rideoffers כמו שסיכמנו שליפה של כל ה
@@ -28,15 +89,12 @@ router.get("/getAllrideoffer", auth, async (req, res) => {
     }
 });
 
-// http://localhost:3000/rideoffers/addRideOffer/123   -> send token
-router.post("/addRideOffer/:id", auth, async (req, res) => {
-
-    let details_id = req.params.id;
+// WORK
+// http://localhost:3000/rideoffers/addRideOffer 
+router.post("/addRideOffer", async (req, res) => {
 
     try {
-        let rideoffer = new RideOfferModel();
-        rideoffer.user_id = req.tokenData._id;
-        rideoffer.rideDetails_id = details_id;
+        let rideoffer = new RideOfferModel(req.body);
         await rideoffer.save();
         res.status(201).json(rideoffer)
     }
@@ -45,6 +103,7 @@ router.post("/addRideOffer/:id", auth, async (req, res) => {
         res.status(500).json({ msg: "err", err })
     }
 })
+
 
 // http://localhost:3000/rideoffers/deleteRideOffer/123 -> send token
 router.delete("/deleteRideOffer/:idDel", auth, async (req, res) => {
