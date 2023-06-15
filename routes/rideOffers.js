@@ -5,7 +5,7 @@ const { RideModel } = require("../models/rideModel");
 const { UserModel } = require("../models/userModel");
 const router = express.Router();
 
-// // http://localhost:3000/rideOffers
+// http://localhost:3000/rideOffers
 // router.get("/", async (req, res) => {
 //     let sort = req.query.sort || "_id";
 //     let reverse = req.query.reverse == "yes" ? -1 : 1;
@@ -59,11 +59,20 @@ const router = express.Router();
 //     }
 // });
 
+router.get("/", async (req, res) => {
+    let sort = req.query.sort || "_id";
+    let reverse = req.query.reverse == "yes" ? -1 : 1;
 
+    try {
+        let ridesOffer = await RideModel.find({});
+        let userIds = ridesOffer.map(ridesOffer => ridesOffer.user_id);
 
-
-
-
+        res.json(rides);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Error", err });
+    }
+});
 
 //למערך ובצד לקוח לשלוף ספציפי יותר rideoffers כמו שסיכמנו שליפה של כל ה
 // http://localhost:3000/rideoffers/getAllRideOffer -> send token
