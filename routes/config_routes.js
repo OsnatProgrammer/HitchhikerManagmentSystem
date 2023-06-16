@@ -4,7 +4,7 @@ const rideOffersR = require("./rideOffers")
 const rideRequestsR = require("./rideRequests")
 const rideDetailsR = require("./rideDetails")
 const ridesR = require("./rides")
-// const messagesR = require("./messages")
+const messagesR = require("./messages")
 
 
 exports.routesInit = (app) => {
@@ -14,7 +14,7 @@ exports.routesInit = (app) => {
     app.use("/rideRequests", rideRequestsR);
     app.use("/rideDetails", rideDetailsR);
     app.use("/rides", ridesR);
-    // app.use("/messages", messagesR);
+    app.use("/messages", messagesR);
 }
 
 
