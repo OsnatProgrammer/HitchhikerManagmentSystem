@@ -41,7 +41,6 @@ router.get("/", async (req, res) => {
 
   try {
     let rides = await RideModel.find({});
-    let r = [];
 
     for (let i = 0; i < rides.length; i++) {
       // Fetch user details for the offer linked to the ride
@@ -69,7 +68,7 @@ router.get("/", async (req, res) => {
     let arr = [];
     rides.forEach((item, i) => {
       arr[i] = {
-        ride_offer: JSON.parse(JSON.stringify(rides[i].userOffer)),
+      ride_offer: JSON.parse(JSON.stringify(rides[i].userOffer)),
       details_offer: JSON.parse(JSON.stringify(rides[i].detailsOffer)),
       ride_requst: JSON.parse(JSON.stringify(rides[i].userRequest,)),
       details_request: JSON.parse(JSON.stringify(rides[i].detailsRequest))
@@ -77,35 +76,30 @@ router.get("/", async (req, res) => {
     })
     res.json({
       arr
-      // ride_offer: JSON.parse(JSON.stringify(rides[0].userOffer)),
-      // details_offer: JSON.parse(JSON.stringify(rides[0].detailsOffer)),
-      // ride_requst: JSON.parse(JSON.stringify(rides[0].userRequest,)),
-      // details_request: JSON.parse(JSON.stringify(rides[0].detailsRequest))
     });
-    //let rides = await RideModel.find({});
-    // let offerIds = rides.map(ride => ride.rideOffer_id);
-    // let offer = await RideOfferModel.find({_id: {$in: offerIds}});
-    // let requestIds = rides.map(ride => ride.rideRequest_id);
-    // let request = await RideRequestModel.find({_id: {$in: requestIds}});
-
-    // let userOfferIds = offer.map(o => o.user_id);
-    // let userO = await UserModel.find({_id: {$in: userOfferIds}});
-
-    // let detailsOfferIds = offer.map(o => o.rideDetails_id);
-    // let detailsO = await RideDetailsModel.find({_id: {$in: detailsOfferIds}});
-
-    // let userRequestIds = request.map(r => r.user_id);
-    // let userR = await UserModel.find({_id: {$in: userRequestIds}});
-
-    // let detailsRequestIds = request.map(r => r.rideDetails_id);
-    // let detailsR = await RideDetailsModel.find({_id: {$in: detailsRequestIds}});
-
-    // res.json({offer, userO, detailsO, request, userR, detailsR});
 
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "Error", err });
   }
 });
+
+// http://localhost:3000/rides/addRide
+router.post("/addRide", async (req, res) => {
+
+  // let details_id = req.params.id;
+
+  try {
+      let ride = new RideModel(req.body);
+      // ride.user_id = req.tokenData._id;
+      // ride.rideDetails_id = details_id;
+      await ride.save();
+      res.status(201).json(ride)
+  }
+  catch (err) {
+      console.log(err)
+      res.status(500).json({ msg: "err", err })
+  }
+})
 
 module.exports = router;
