@@ -29,11 +29,15 @@ const router = express.Router();
 // });
 
 // work
-// http://localhost:3000/rideRequests/addRideRequest   
-router.post("/addRideRequest", async (req, res) => {
+// http://localhost:3000/rideRequests/addrideRequest   
+router.post("/addrideRequest/", async (req, res) => {
+
+    // let details_id = req.params.id;
 
     try {
         let rideRequest = new RideRequestModel(req.body);
+        // rideRequest.user_id = req.tokenData._id;
+        // rideRequest.rideDetails_id = details_id;
         await rideRequest.save();
         res.status(201).json(rideRequest)
     }
