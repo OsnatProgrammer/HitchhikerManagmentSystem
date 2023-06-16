@@ -85,6 +85,74 @@ router.get("/getAllRides", async (req, res) => {
   }
 });
 
+// http://localhost:3000/rides/getAllRidesOffer
+router.get("/getAllRidesOffer", async (req, res) => {
+  try {
+    let rides = await RideModel.find({});
+    for (let i = 0; i < rides.length; i++) {
+      // Fetch user details for the offer linked to the ride
+      let offer = await RideOfferModel.findById(rides[i].rideOffer_id);
+      let userOffer = await UserModel.findById(offer.user_id);
+      let detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
+
+      userOffer = JSON.parse(JSON.stringify(userOffer));
+      detailsOffer = JSON.parse(JSON.stringify(detailsOffer));
+
+      // Assign the fetched details to the ride object
+      rides[i].rideID = rides[i]._id; // Change this line to use rides[i]._id
+      rides[i].userOffer = userOffer;
+      rides[i].detailsOffer = detailsOffer;
+    }
+
+    let arr = [];
+    rides.forEach((item, i) => {
+      arr[i] = {
+        rideID: rides[i].rideID, // Update to use rides[i].rideID
+        ride_offer: JSON.parse(JSON.stringify(rides[i].userOffer)),
+        details_offer: JSON.parse(JSON.stringify(rides[i].detailsOffer))
+      };
+    });
+    res.json({ arr });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
+// http://localhost:3000/rides/getAllRidesRequest
+router.get("/getAllRidesRequest", async (req, res) => {
+  try {
+    let rides = await RideModel.find({});
+    for (let i = 0; i < rides.length; i++) {
+      // Fetch user details for the Request linked to the ride
+      let request = await RideRequestModel.findById(rides[i].rideRequest_id);
+      let userRequest = await UserModel.findById(request.user_id);
+      let detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
+
+      userRequest = JSON.parse(JSON.stringify(userRequest));
+      detailsRequest = JSON.parse(JSON.stringify(detailsRequest));
+
+      // Assign the fetched details to the ride object
+      rides[i].rideID = rides[i]._id; // Change this line to use rides[i]._id
+      rides[i].userRequest = userRequest;
+      rides[i].detailsRequest = detailsRequest;
+    }
+
+    let arr = [];
+    rides.forEach((item, i) => {
+      arr[i] = {
+        rideID: rides[i].rideID, // Update to use rides[i].rideID
+        ride_Request: JSON.parse(JSON.stringify(rides[i].userRequest)),
+        details_Request: JSON.parse(JSON.stringify(rides[i].detailsRequest))
+      };
+    });
+    res.json({ arr });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
 // http://localhost:3000/rides/getAllRidesById -> send token user
 router.get("/getAllRidesById", auth, async (req, res) => {
   const userId = req.tokenData._id;
