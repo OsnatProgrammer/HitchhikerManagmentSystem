@@ -5,7 +5,7 @@ const { RideModel } = require("../models/rideModel");
 const { UserModel } = require("../models/userModel");
 const router = express.Router();
 
-// http://localhost:3000/rideOffers
+// http://localhost:3001/rideOffers
 // router.get("/", async (req, res) => {
 //     let sort = req.query.sort || "_id";
 //     let reverse = req.query.reverse == "yes" ? -1 : 1;
@@ -75,7 +75,7 @@ router.get("/", async (req, res) => {
 });
 
 //למערך ובצד לקוח לשלוף ספציפי יותר rideoffers כמו שסיכמנו שליפה של כל ה
-// http://localhost:3000/rideoffers/getAllRideOffer -> send token
+// http://localhost:3001/rideoffers/getAllRideOffer -> send token
 router.get("/getAllrideoffer", auth, async (req, res) => {
     let sort = req.query.sort || "_id";
     let reverse = req.query.reverse == "yes" ? -1 : 1;
@@ -99,7 +99,7 @@ router.get("/getAllrideoffer", auth, async (req, res) => {
 });
 
 // WORK
-// http://localhost:3000/rideoffers/addRideOffer 
+// http://localhost:3001/rideoffers/addRideOffer 
 router.post("/addRideOffer", async (req, res) => {
 
     try {
@@ -114,7 +114,7 @@ router.post("/addRideOffer", async (req, res) => {
 })
 
 
-// http://localhost:3000/rideoffers/deleteRideOffer/123 -> send token
+// http://localhost:3001/rideoffers/deleteRideOffer/123 -> send token
 router.delete("/deleteRideOffer/:idDel", auth, async (req, res) => {
 
     try {

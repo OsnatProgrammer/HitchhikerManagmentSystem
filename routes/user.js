@@ -1,31 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { auth,authadmin} = require("../middlewares/auth");
+const { auth, authadmin } = require("../middlewares/auth");
 const { UserModel, validUser, validLogin, createToken } = require("../models/userModel")
 const jwt = require("jsonwebtoken");
 // const { config } = require("dotenv");
-const {config} = require("../config/secret");
+const { config } = require("../config/secret");
 
 //get user list for user admin
-//http://localhost:3000/users/usersList
-router.get("/usersList" , authadmin,  async(req,res) => {
-    let sort = req.query.sort || "name";
-    let reverse = req.query.reverse == "yes" ? -1 : 1;
-  try{
-    
-    let data = await UserModel.find({},{password:0})
-    .sort({ [sort]: reverse });
+//http://localhost:3001/users/usersList
+router.get("/usersList", authadmin, async (req, res) => {
+  let sort = req.query.sort || "name";
+  let reverse = req.query.reverse == "yes" ? -1 : 1;
+  try {
+
+    let data = await UserModel.find({}, { password: 0 })
+      .sort({ [sort]: reverse });
     res.json(data)
   }
-  catch(err){
+  catch (err) {
     console.log(err)
-    res.status(500).json({msg:"err",err})
-  }  
+    res.status(500).json({ msg: "err", err })
+  }
 })
 
 //get personal email
-//http://localhost:3000/users/myEmail
+//http://localhost:3001/users/myEmail
 router.get("/myEmail", auth, async (req, res) => {
   try {
     let user = await UserModel.findOne({ _id: req.tokenData._id }, { email: 1 })
@@ -38,8 +38,8 @@ router.get("/myEmail", auth, async (req, res) => {
 })
 
 //get personal details
-//http://localhost:3000/users/myInfo
-router.get("/myInfo", auth ,async (req, res) => {
+//http://localhost:3001/users/myInfo
+router.get("/myInfo", auth, async (req, res) => {
 
   let token = req.header("x-api-key");
   if (!token) {
@@ -59,7 +59,7 @@ router.get("/myInfo", auth ,async (req, res) => {
 })
 
 //add user
-//http://localhost:3000/users
+//http://localhost:3001/users
 router.post("/", async (req, res) => {
   let validBody = validUser(req.body);
 
@@ -86,7 +86,7 @@ router.post("/", async (req, res) => {
 })
 
 //user login
-//http://localhost:3000/users/login
+//http://localhost:3001/users/login
 router.post("/login", async (req, res) => {
   let validBody = validLogin(req.body);
 
@@ -104,7 +104,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ msg: "Password or email is worng ,code:2" });
     }
 
-    let newToken = createToken(user._id , user.role);
+    let newToken = createToken(user._id, user.role);
     res.json({ token: newToken });
   } catch (err) {
     console.log(err)
@@ -112,8 +112,24 @@ router.post("/login", async (req, res) => {
   }
 })
 
+// http://localhost:3001/users/updateStatus/:id
+router.patch("/updateStatus/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const newStatus = req.body.status;
+
+    let data = await UserModel.updateOne({ _id: userId }, { status: newStatus });
+
+    res.json(data);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
 //delete by userId
-//http://localhost:3000/users/:idDel
+//http://localhost:3001/users/:idDel
 router.delete("/:idDel", auth, async (req, res) => {
   try {
     let idDel = req.params.idDel;

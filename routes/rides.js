@@ -7,7 +7,7 @@ const { UserModel } = require("../models/userModel");
 const { RideDetailsModel } = require("../models/rideDetailModel");
 const router = express.Router();
 
-// http://localhost:3000/rides/getAllRides 
+// http://localhost:3001/rides/getAllRides 
 // router.get("/getAllRides", async (req, res) => {
 //   let sort = req.query.sort || "_id";
 //   let reverse = req.query.reverse == "yes" ? -1 : 1;
@@ -37,7 +37,7 @@ const router = express.Router();
 //   }
 // });
 
-// http://localhost:3000/rides/getAllRides 
+// http://localhost:3001/rides/getAllRides 
 router.get("/getAllRides", async (req, res) => {
 
   try {
@@ -85,7 +85,7 @@ router.get("/getAllRides", async (req, res) => {
   }
 });
 
-// http://localhost:3000/rides/getAllRidesOffer
+// http://localhost:3001/rides/getAllRidesOffer
 router.get("/getAllRidesOffer", async (req, res) => {
   try {
     let rides = await RideModel.find({});
@@ -119,7 +119,7 @@ router.get("/getAllRidesOffer", async (req, res) => {
   }
 });
 
-// http://localhost:3000/rides/getAllRidesRequest
+// http://localhost:3001/rides/getAllRidesRequest
 router.get("/getAllRidesRequest", async (req, res) => {
   try {
     let rides = await RideModel.find({});
@@ -153,7 +153,7 @@ router.get("/getAllRidesRequest", async (req, res) => {
   }
 });
 
-// http://localhost:3000/rides/getAllRidesById -> send token user
+// http://localhost:3001/rides/getAllRidesById -> send token user
 router.get("/getAllRidesById", auth, async (req, res) => {
   const userId = req.tokenData._id;
 
@@ -199,7 +199,7 @@ router.get("/getAllRidesById", auth, async (req, res) => {
   }
 });
 
-// http://localhost:3000/rides/getAllRidesByIdAndStatus/:status
+// http://localhost:3001/rides/getAllRidesByIdAndStatus/:status
 router.get("/getAllRidesById/:status", auth, async (req, res) => {
   const userId = req.tokenData._id;
   const userStatus = req.params.status; // Get the user's status from the URL
@@ -249,7 +249,7 @@ router.get("/getAllRidesById/:status", auth, async (req, res) => {
   }
 });
 
-// http://localhost:3000/rides/addRide
+// http://localhost:3001/rides/addRide
 router.post("/addRide", async (req, res) => {
 
   // let details_id = req.params.id;

@@ -33,7 +33,7 @@ const { RideDetailsModel, validateRideDetails } = require("../models/rideDetailM
 
 //קבלת נסיעה ע"י קוד
 //getRideDetailsById()
-// http://localhost:3000/getRideDetailsById/:id
+// http://localhost:3001/getRideDetailsById/:id
 router.get("getRideDetailsById/:id", async (req, res) => {
     let id = req.params.id;
     try {
@@ -49,7 +49,7 @@ router.get("getRideDetailsById/:id", async (req, res) => {
 });
 
 //קבלת כל פרטי הנסיעות באמצעות טוקן של מנהל
-// http://localhost:3000/rideDetails/getRideDetailsList    -> send only admin token  
+// http://localhost:3001/rideDetails/getRideDetailsList    -> send only admin token  
 router.get("getRideDetailsList", async (req, res) => {
     try {
         let data = await RideDetailsModel.find({});
@@ -63,7 +63,7 @@ router.get("getRideDetailsList", async (req, res) => {
     }
 });
 
-// http://localhost:3000/rideDetails/addRideDetails    -> send token admin or user
+// http://localhost:3001/rideDetails/addRideDetails    -> send token admin or user
 // router.post("/addRideDetails", auth, async (req, res) => {
 router.post("/addRideDetails", async (req, res) => {
     let validateBody = validateRideDetails(req.body);
@@ -82,7 +82,7 @@ router.post("/addRideDetails", async (req, res) => {
     }
 })
 
-// http://localhost:3000/updateRideDetails/:idEdit     -> send token admin or user
+// http://localhost:3001/updateRideDetails/:idEdit     -> send token admin or user
 router.put("/updateRideDetails/:idEdit", auth, async (req, res) => {
     let validateBody = validateRideDetails(req.body);
     if (validateBody.error) {
@@ -110,7 +110,7 @@ router.put("/updateRideDetails/:idEdit", auth, async (req, res) => {
     }
 })
 
-// http://localhost:3000/deleteRidedetails/:idDel     -> send token admin or user
+// http://localhost:3001/deleteRidedetails/:idDel     -> send token admin or user
 router.delete("/deleteRidedetails/:idDel", auth, async (req, res) => {
     try {
         let idDel = req.params.idDel;
@@ -134,7 +134,7 @@ router.delete("/deleteRidedetails/:idDel", auth, async (req, res) => {
 })
 
 
-// // http://localhost:3000/toys/:idEdit     -> send token admin or user
+// // http://localhost:3001/toys/:idEdit     -> send token admin or user
 // router.put("/:idEdit", auth, async (req, res) => {
 //     let validateBody = validateToy(req.body);
 //     if (validateBody.error) {
@@ -162,7 +162,7 @@ router.delete("/deleteRidedetails/:idDel", auth, async (req, res) => {
 //     }
 // })
 
-// // http://localhost:3000/toys/:idDel     -> send token admin or user
+// // http://localhost:3001/toys/:idDel     -> send token admin or user
 // router.delete("/:idDel", auth, async (req, res) => {
 //     try {
 //         let idDel = req.params.idDel;
