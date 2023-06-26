@@ -202,7 +202,7 @@ router.get("/getAllRidesById", auth, async (req, res) => {
 // http://localhost:3001/rides/getAllRidesByIdAndStatus/:status
 router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
   const userId = req.tokenData._id;
-  const rideDetails = req.params.status; // Get the user's status from the URL
+  const rideDetails = req.params.status; 
 
   try {
     const rides = await RideModel.find({});
@@ -217,15 +217,11 @@ router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
       const userRequest = await UserModel.findById(request.user_id);
       const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
       const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
-     console.log("rideDetails",rideDetails);
-      console.log("detailsOffer.status", detailsOffer.status);
-      console.log("detailsRequest.status", detailsRequest.status);
+    
       if (
         (userOffer._id.toString() === userId.toString() && detailsOffer.status == rideDetails) ||
         (userRequest._id.toString() === userId.toString() && detailsRequest.status == rideDetails)
       ) {
-
-
         const userOfferData = JSON.parse(JSON.stringify(userOffer));
         const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
         const userRequestData = JSON.parse(JSON.stringify(userRequest));
