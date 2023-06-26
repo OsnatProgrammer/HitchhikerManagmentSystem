@@ -3,6 +3,7 @@ const { RideOfferModel } = require("../models/rideOfferModel");
 const { auth } = require("../middlewares/auth");
 const { RideModel } = require("../models/rideModel");
 const { UserModel } = require("../models/userModel");
+const { RideDetailsModel } = require("../models/rideDetailModel");
 const router = express.Router();
 
 // http://localhost:3001/rideOffers
@@ -93,6 +94,27 @@ router.get("/getAllrideoffer", auth, async (req, res) => {
     }
 
     catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Error", err });
+    }
+});
+
+// http://localhost:3001/rideoffers/getAllridesoffersOpen
+router.get("/getAllridesoffersOpen", async (req, res) => {
+    // let sort = req.query.sort || "_id";
+    try {
+        let ar_rideoffers = [];
+        let rideoffers = await RideOfferModel.find({})
+        for (let i = 0; i < rideoffers.length; i++) {
+            let detailsOffer = await RideDetailsModel.findById(rideoffers[i].rideDetails_id);
+            // .sort({ [sort]: reverse });
+            if (detailsOffer.status === 0) {
+                ar_rideoffers.push(detailsOffer);
+            }
+        }
+        res.json({ar_rideoffers});
+
+    } catch (err) {
         console.log(err);
         res.status(500).json({ msg: "Error", err });
     }

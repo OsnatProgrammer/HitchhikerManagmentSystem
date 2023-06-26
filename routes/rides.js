@@ -202,7 +202,7 @@ router.get("/getAllRidesById", auth, async (req, res) => {
 // http://localhost:3001/rides/getAllRidesByIdAndStatus/:status
 router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
   const userId = req.tokenData._id;
-  const rideDetails = req.params.status; 
+  const rideDetails = req.params.status;
 
   try {
     const rides = await RideModel.find({});
@@ -217,10 +217,59 @@ router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
       const userRequest = await UserModel.findById(request.user_id);
       const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
       const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
-    
+
       if (
         (userOffer._id.toString() === userId.toString() && detailsOffer.status == rideDetails) ||
         (userRequest._id.toString() === userId.toString() && detailsRequest.status == rideDetails)
+      ) {
+        const userOfferData = JSON.parse(JSON.stringify(userOffer));
+        const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
+        const userRequestData = JSON.parse(JSON.stringify(userRequest));
+        const detailsRequestData = JSON.parse(JSON.stringify(detailsRequest));
+
+        const rideData = {
+          rideID,
+          ride_offer: userOfferData,
+          details_offer: detailsOfferData,
+          ride_request: userRequestData,
+          details_request: detailsRequestData
+        };
+
+        userRides.push(rideData);
+      }
+    }
+
+    res.json({
+      rides: userRides
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
+// http://localhost:3001/rides/getAllRidesByStatus/:status
+router.get("/getAllRidesByStatus/:status", auth, async (req, res) => {
+  const userId = req.tokenData._id;
+  const rideDetails = req.params.status;
+
+  try {
+    const rides = await RideModel.find({});
+    const userRides = [];
+
+    for (let i = 0; i < rides.length; i++) {
+      const ride = rides[i];
+      const rideID = ride._id;
+      const offer = await RideOfferModel.findById(ride.rideOffer_id);
+      const userOffer = await UserModel.findById(offer.user_id);
+      const request = await RideRequestModel.findById(ride.rideRequest_id);
+      const userRequest = await UserModel.findById(request.user_id);
+      const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
+      const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
+
+      if (
+        (userOffer._id.toString() != userId.toString() && detailsOffer.status == rideDetails && userOffer.address == rideDetails.departure_address) ||
+        (userRequest._id.toString() != userId.toString() && detailsRequest.status == rideDetails)
       ) {
         const userOfferData = JSON.parse(JSON.stringify(userOffer));
         const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
