@@ -27,7 +27,7 @@ exports.authadmin = (req, res, next) => {
 
     try {
         let decodeToken = jwt.verify(token, config.tokenSecret)
-        if (decodeToken.role != "ADMIN") {
+        if (decodeToken.role != "admin") {
             return res.status(401).json({ msg: "token is valid or expired, code :3" })
         }
 
