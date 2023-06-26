@@ -200,9 +200,9 @@ router.get("/getAllRidesById", auth, async (req, res) => {
 });
 
 // http://localhost:3001/rides/getAllRidesByIdAndStatus/:status
-router.get("/getAllRidesById/:status", auth, async (req, res) => {
+router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
   const userId = req.tokenData._id;
-  const userStatus = req.params.status; // Get the user's status from the URL
+  const rideDetails = req.params.status; // Get the user's status from the URL
 
   try {
     const rides = await RideModel.find({});
@@ -215,13 +215,16 @@ router.get("/getAllRidesById/:status", auth, async (req, res) => {
       const userOffer = await UserModel.findById(offer.user_id);
       const request = await RideRequestModel.findById(ride.rideRequest_id);
       const userRequest = await UserModel.findById(request.user_id);
-
+      const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
+      const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
+     console.log("rideDetails",rideDetails);
+      console.log("detailsOffer.status", detailsOffer.status);
+      console.log("detailsRequest.status", detailsRequest.status);
       if (
-        (userOffer._id.toString() === userId.toString() && userOffer.status === userStatus) ||
-        (userRequest._id.toString() === userId.toString() && userRequest.status === userStatus)
+        (userOffer._id.toString() === userId.toString() && detailsOffer.status == rideDetails) ||
+        (userRequest._id.toString() === userId.toString() && detailsRequest.status == rideDetails)
       ) {
-        const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
-        const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
+
 
         const userOfferData = JSON.parse(JSON.stringify(userOffer));
         const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
@@ -233,7 +236,7 @@ router.get("/getAllRidesById/:status", auth, async (req, res) => {
           ride_offer: userOfferData,
           details_offer: detailsOfferData,
           ride_request: userRequestData,
-          details_request : detailsRequestData
+          details_request: detailsRequestData
         };
 
         userRides.push(rideData);
