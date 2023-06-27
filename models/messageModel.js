@@ -6,7 +6,10 @@ const MessageSchema = new mongoose.Schema({
     user_idReceive: String,
     messageDetails: String,
     rides_id: String,
-    status:{type:Boolean, default:false}
+    status: { type: Boolean, default: false },
+    date_created: {
+        type: Date, default: Date.now()
+    }
 })
 
 exports.MessageModel = mongoose.model("messages", MessageSchema);
