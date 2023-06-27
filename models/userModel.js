@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { config } = require("../config/secret");
 
 let userSchema = new mongoose.Schema({
-  name: String,
+  fullName:{firstName: String, lastName:String},
   email: String,
   password: String,
   address: String,
@@ -30,7 +30,7 @@ exports.createToken = (user_id, role) => {
 
 exports.validUser = (_reqBody) => {
   let joiSchema = Joi.object({
-    name: Joi.string().min(2).max(99).required(),
+    fullName: {firstName:Joi.string().min(2).max(99).required(), lastName:Joi.string().min(2).max(99).required()} ,
     email: Joi.string().min(2).max(99).email().required(),
     address: Joi.string().min(2).max(99).required(),
     gender: Joi.string().min(4).max(6).required(),

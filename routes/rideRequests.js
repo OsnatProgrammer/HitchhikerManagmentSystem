@@ -31,6 +31,27 @@ const router = express.Router();
 //     }
 // });
 
+// http://localhost:3001/rideRequests/getAllridesRequestsOpen
+router.get("/getAllridesRequestsOpen", async (req, res) => {
+    // let sort = req.query.sort || "_id";
+    try {
+        let ar_rideRequests = [];
+        let rideRequests = await RideRequestModel.find({})
+        for (let i = 0; i < rideRequests.length; i++) {
+            let detailsRequest = await RideDetailsModel.findById(rideRequests[i].rideDetails_id);
+            // .sort({ [sort]: reverse });
+            if (detailsRequest.status === 0) {
+                ar_rideRequests.push(detailsRequest);
+            }
+        }
+        res.json({ar_rideRequests});
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Error", err });
+    }
+});
+
 // http://localhost:3001/rideRequests/addrideRequest   
 router.post("/addrideRequest", async (req, res) => {
 
