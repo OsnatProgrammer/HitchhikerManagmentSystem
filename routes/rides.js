@@ -180,8 +180,10 @@ router.get("/getAllRidesById", auth, async (req, res) => {
 
         const rideData = {
           rideID,
+          userIdOffer:userOffer._id,
           ride_offer: userOfferData,
           details_offer: detailsOfferData,
+          userIdRequest:userRequest._id,
           ride_request: userRequestData,
           details_request: detailsRequestData
         };

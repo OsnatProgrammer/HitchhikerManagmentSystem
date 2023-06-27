@@ -53,7 +53,7 @@ router.get("/getAllridesRequestsOpen", async (req, res) => {
 });
 
 // http://localhost:3001/rideRequests/addrideRequest   
-router.post("/addrideRequest/", async (req, res) => {
+router.post("/addrideRequest", async (req, res) => {
 
     // let details_id = req.params.id;
 
@@ -72,7 +72,7 @@ router.post("/addrideRequest/", async (req, res) => {
 
 // http://localhost:3001/rideRequests/updateStatus/?idOffer=XXXXXX
 // http://localhost:3001/rideRequests/updateStatus/?idRequest=XXXX
-router.patch("/updateStatus/", async (req, res) => {
+router.patch("/updateStatus", async (req, res) => {
 
     let idRequest = req.query.idRequest;
     let idOffer = req.query.idOffer;
