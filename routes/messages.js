@@ -30,6 +30,19 @@ router.get("/getMessageByIdRecive/:idReceive", async (req, res) => {
     }
 })
 
+
+router.get("/getMessageByMessageId/:messageId", async (req, res) => {
+    const messageId = req.params.messageId;
+  
+    try {
+      const message = await MessageModel.findById(messageId);
+      res.json(message);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: "There is an error, please try again later", error });
+    }
+  });
+  
 router.post("/addMessage", auth, async (req, res) => {
 
     try {
@@ -71,5 +84,20 @@ router.patch("/changeMessageStatus/:id", async (req, res) => {
     }
   });
   
+
+  router.post("/addMessageSystem", async (req, res) => {
+
+    try {
+        let newMessage = new MessageModel(req.body);
+        newMessage.user_idSend = "0";
+        await newMessage.save();
+        res.status(201).json(newMessage)
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ msg: "err", err })
+    }
+})
+
 
 module.exports = router;
