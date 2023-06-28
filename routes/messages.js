@@ -43,11 +43,10 @@ router.get("/getMessageByMessageId/:messageId", async (req, res) => {
     }
   });
   
-router.post("/addMessage", auth, async (req, res) => {
+router.post("/addMessage", async (req, res) => {
 
     try {
         let newMessage = new MessageModel(req.body);
-        newMessage.user_idSend = req.tokenData._id;
         await newMessage.save();
         res.status(201).json(newMessage)
     }
