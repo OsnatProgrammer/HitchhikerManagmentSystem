@@ -41,10 +41,14 @@ router.get("/getAllridesRequestsOpen", async (req, res) => {
             let detailsRequest = await RideDetailsModel.findById(rideRequests[i].rideDetails_id);
             // .sort({ [sort]: reverse });
             if (detailsRequest.status === 0) {
-                ar_rideRequests.push(detailsRequest);
+                const rideData = {
+                    ride_request: rideRequests[i],
+                    details_request: detailsRequest,
+                };
+                ar_rideRequests.push(rideData);
             }
         }
-        res.json({ar_rideRequests});
+        res.json({ ar_rideRequests });
 
     } catch (err) {
         console.log(err);
@@ -112,6 +116,25 @@ router.delete("/deleterideRequest/:idDel", async (req, res) => {
         res.status(500).json({ msg: "err", err })
     }
 })
+
+router.patch("/updateStatus/:id", async (req, res) => {
+    try {
+        const rideRequestId = req.params.id;
+        const newStatus = req.body.status;
+
+        // Retrieve the rideDetails_id associated with the rideRequestId
+        const rideRequest = await RideRequestModel.findOne({ _id: rideRequestId });
+        const rideDetailsId = rideRequest.rideDetails_id;
+
+        // Update the status in the rideDetails table
+        await RideDetailsModel.updateOne({ _id: rideDetailsId }, { status: newStatus });
+
+        res.json({ msg: "Status updated successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Error updating status", error });
+    }
+});
 
 module.exports = router;
 

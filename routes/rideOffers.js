@@ -109,7 +109,11 @@ router.get("/getAllridesoffersOpen", async (req, res) => {
             let detailsOffer = await RideDetailsModel.findById(rideoffers[i].rideDetails_id);
             // .sort({ [sort]: reverse });
             if (detailsOffer.status === 0) {
-                ar_rideoffers.push(detailsOffer);
+                const rideData = {
+                    ride_offer:rideoffers[i],
+                    details_offer: detailsOffer,
+                  };
+                ar_rideoffers.push(rideData);
             }
         }
         res.json({ar_rideoffers});
@@ -150,5 +154,25 @@ router.delete("/deleteRideOffer/:idDel", auth, async (req, res) => {
         res.status(500).json({ msg: "err", err })
     }
 })
+
+router.patch("/updateStatus/:id", async (req, res) => {
+    try {
+      const rideOfferId = req.params.id;
+      const newStatus = req.body.status;
+  
+      // Retrieve the rideDetails_id associated with the rideOfferId
+      const rideOffer = await RideOfferModel.findOne({ _id: rideOfferId });
+      const rideDetailsId = rideOffer.rideDetails_id;
+  
+      // Update the status in the rideDetails table
+      await RideDetailsModel.updateOne({ _id: rideDetailsId }, { status: newStatus });
+  
+      res.json({ msg: "Status updated successfully" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: "Error updating status", error });
+    }
+  });
+  
 
 module.exports = router;
