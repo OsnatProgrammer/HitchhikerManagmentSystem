@@ -43,11 +43,10 @@ router.get("/getMessageByMessageId/:messageId", async (req, res) => {
     }
   });
   
-router.post("/addMessage", auth, async (req, res) => {
+router.post("/addMessage", async (req, res) => {
 
     try {
         let newMessage = new MessageModel(req.body);
-        newMessage.user_idSend = req.tokenData._id;
         await newMessage.save();
         res.status(201).json(newMessage)
     }
@@ -99,5 +98,17 @@ router.patch("/changeMessageStatus/:id", async (req, res) => {
     }
 })
 
-
+router.delete("/deleteMessage/:id", async (req, res) => {
+    const messageId = req.params.id;
+  
+    try {
+      // Find the message by ID and remove it
+      await MessageModel.findByIdAndDelete(messageId);
+      
+      res.status(200).json({ message: 'Message deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete message' });
+    }
+  });
+  
 module.exports = router;
