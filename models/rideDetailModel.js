@@ -17,7 +17,6 @@ exports.validateRideDetails = (_reqBody) => {
         departure_address: Joi.string().min(5).max(200).required(),
         destination_address: Joi.string().min(5).max(200).required(),
         departure_time: Joi.date().required(),
-        emptySeatNum: Joi.number().min(1).max(20).required(),
         status: Joi.number().allow(null, "")
     })
 
