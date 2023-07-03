@@ -55,6 +55,30 @@ router.get("/getAllridesRequestsOpen", async (req, res) => {
         res.status(500).json({ msg: "Error", err });
     }
 });
+// http://localhost:3001/rideRequests/getAllridesRequestsOpenById
+router.get("/getAllridesRequestsOpenById", auth,async (req, res) => {
+    const userId = req.tokenData._id;
+    try {
+        let ar_rideRequests = [];
+        let rideRequests = await RideRequestModel.find({})
+        for (let i = 0; i < rideRequests.length; i++) {
+            let detailsRequest = await RideDetailsModel.findById(rideRequests[i].rideDetails_id);
+            // .sort({ [sort]: reverse });
+            if (detailsRequest.status === 0&&userId==rideRequests[i].user_id) {
+                const rideData = {
+                    ride_request: rideRequests[i],
+                    details_request: detailsRequest,
+                };
+                ar_rideRequests.push(rideData);
+            }
+        }
+        res.json({ ar_rideRequests });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Error", err });
+    }
+});
 
 // http://localhost:3001/rideRequests/addrideRequest   
 router.post("/addrideRequest", async (req, res) => {

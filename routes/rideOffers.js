@@ -110,13 +110,13 @@ router.get("/getAllridesoffersOpen", async (req, res) => {
             // .sort({ [sort]: reverse });
             if (detailsOffer.status === 0) {
                 const rideData = {
-                    ride_offer:rideoffers[i],
+                    ride_offer: rideoffers[i],
                     details_offer: detailsOffer,
-                  };
+                };
                 ar_rideoffers.push(rideData);
             }
         }
-        res.json({ar_rideoffers});
+        res.json({ ar_rideoffers });
 
     } catch (err) {
         console.log(err);
@@ -124,7 +124,6 @@ router.get("/getAllridesoffersOpen", async (req, res) => {
     }
 });
 
-// WORK
 // http://localhost:3001/rideoffers/addRideOffer 
 router.post("/addRideOffer", async (req, res) => {
 
@@ -157,22 +156,22 @@ router.delete("/deleteRideOffer/:idDel", auth, async (req, res) => {
 
 router.patch("/updateStatus/:id", async (req, res) => {
     try {
-      const rideOfferId = req.params.id;
-      const newStatus = req.body.status;
-  
-      // Retrieve the rideDetails_id associated with the rideOfferId
-      const rideOffer = await RideOfferModel.findOne({ _id: rideOfferId });
-      const rideDetailsId = rideOffer.rideDetails_id;
-  
-      // Update the status in the rideDetails table
-      await RideDetailsModel.updateOne({ _id: rideDetailsId }, { status: newStatus });
-  
-      res.json({ msg: "Status updated successfully" });
+        const rideOfferId = req.params.id;
+        const newStatus = req.body.status;
+
+        // Retrieve the rideDetails_id associated with the rideOfferId
+        const rideOffer = await RideOfferModel.findOne({ _id: rideOfferId });
+        const rideDetailsId = rideOffer.rideDetails_id;
+
+        // Update the status in the rideDetails table
+        await RideDetailsModel.updateOne({ _id: rideDetailsId }, { status: newStatus });
+
+        res.json({ msg: "Status updated successfully" });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: "Error updating status", error });
+        console.log(error);
+        res.status(500).json({ msg: "Error updating status", error });
     }
-  });
-  
+});
+
 
 module.exports = router;

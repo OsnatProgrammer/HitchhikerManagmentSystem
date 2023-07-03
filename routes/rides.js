@@ -180,10 +180,66 @@ router.get("/getAllRidesById", auth, async (req, res) => {
 
         const rideData = {
           rideID,
-          userIdOffer:userOffer._id,
+          userIdOffer: userOffer._id,
           ride_offer: userOfferData,
           details_offer: detailsOfferData,
-          userIdRequest:userRequest._id,
+          userIdRequest: userRequest._id,
+          ride_request: userRequestData,
+          details_request: detailsRequestData
+        };
+
+        userRides.push(rideData);
+      }
+    }
+
+    res.json({
+      rides: userRides
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
+// http://localhost:3001/rides/getAllRidesByIdAndStatus/0 -> send token user
+router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
+  const userId = req.tokenData._id;
+  // console.log(userId);
+  const status = req.params.status;
+  // console.log(status);
+  try {
+    const rides = await RideModel.find({});
+    const userRides = [];
+
+    for (let i = 0; i < rides.length; i++) {
+      const ride = rides[i];
+      const rideID = ride._id;
+      const offer = await RideOfferModel.findById(ride.rideOffer_id);
+      const userOffer = await UserModel.findById(offer.user_id);
+      const request = await RideRequestModel.findById(ride.rideRequest_id);
+      const userRequest = await UserModel.findById(request.user_id);
+      const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id)
+      const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
+      console.log("offer.user_id",offer.user_id,"userId",userId);
+      console.log("detailsOffer.status",detailsOffer.status,"status",status);
+      console.log("request.user_id",request.user_id,"userId",userId);
+      console.log("detailsRequest.status",detailsRequest.status,"status",status);
+      if (
+        (offer.user_id.toString() === userId.toString() && detailsOffer.status.toString() == status.toString()) ||
+        (request.user_id.toString() === userId.toString() && detailsRequest.status.toString() == status.toString())
+      ) {
+console.log("hi");
+        const userOfferData = JSON.parse(JSON.stringify(userOffer));
+        const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
+        const userRequestData = JSON.parse(JSON.stringify(userRequest));
+        const detailsRequestData = JSON.parse(JSON.stringify(detailsRequest));
+
+        const rideData = {
+          rideID,
+          userIdOffer: userOffer._id,
+          ride_offer: userOfferData,
+          details_offer: detailsOfferData,
+          userIdRequest: userRequest._id,
           ride_request: userRequestData,
           details_request: detailsRequestData
         };
@@ -202,53 +258,53 @@ router.get("/getAllRidesById", auth, async (req, res) => {
 });
 
 // http://localhost:3001/rides/getAllRidesByIdAndStatus/:status
-router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
-  const userId = req.tokenData._id;
-  const rideDetails = req.params.status;
+// router.get("/getAllRidesByIdAndStatus/:status", auth, async (req, res) => {
+//   const userId = req.tokenData._id;
+//   const rideDetails = req.params.status;
 
-  try {
-    const rides = await RideModel.find({});
-    const userRides = [];
+//   try {
+//     const rides = await RideModel.find({});
+//     const userRides = [];
 
-    for (let i = 0; i < rides.length; i++) {
-      const ride = rides[i];
-      const rideID = ride._id;
-      const offer = await RideOfferModel.findById(ride.rideOffer_id);
-      const userOffer = await UserModel.findById(offer.user_id);
-      const request = await RideRequestModel.findById(ride.rideRequest_id);
-      const userRequest = await UserModel.findById(request.user_id);
-      const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
-      const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
+//     for (let i = 0; i < rides.length; i++) {
+//       const ride = rides[i];
+//       const rideID = ride._id;
+//       const offer = await RideOfferModel.findById(ride.rideOffer_id);
+//       const userOffer = await UserModel.findById(offer.user_id);
+//       const request = await RideRequestModel.findById(ride.rideRequest_id);
+//       const userRequest = await UserModel.findById(request.user_id);
+//       const detailsOffer = await RideDetailsModel.findById(offer.rideDetails_id);
+//       const detailsRequest = await RideDetailsModel.findById(request.rideDetails_id);
 
-      if (
-        (userOffer._id.toString() === userId.toString() && detailsOffer.status == rideDetails) ||
-        (userRequest._id.toString() === userId.toString() && detailsRequest.status == rideDetails)
-      ) {
-        const userOfferData = JSON.parse(JSON.stringify(userOffer));
-        const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
-        const userRequestData = JSON.parse(JSON.stringify(userRequest));
-        const detailsRequestData = JSON.parse(JSON.stringify(detailsRequest));
+//       if (
+//         (userOffer._id.toString() === userId.toString() && detailsOffer.status == rideDetails) ||
+//         (userRequest._id.toString() === userId.toString() && detailsRequest.status == rideDetails)
+//       ) {
+//         const userOfferData = JSON.parse(JSON.stringify(userOffer));
+//         const detailsOfferData = JSON.parse(JSON.stringify(detailsOffer));
+//         const userRequestData = JSON.parse(JSON.stringify(userRequest));
+//         const detailsRequestData = JSON.parse(JSON.stringify(detailsRequest));
 
-        const rideData = {
-          rideID,
-          ride_offer: userOfferData,
-          details_offer: detailsOfferData,
-          ride_request: userRequestData,
-          details_request: detailsRequestData
-        };
+//         const rideData = {
+//           rideID,
+//           ride_offer: userOfferData,
+//           details_offer: detailsOfferData,
+//           ride_request: userRequestData,
+//           details_request: detailsRequestData
+//         };
 
-        userRides.push(rideData);
-      }
-    }
+//         userRides.push(rideData);
+//       }
+//     }
 
-    res.json({
-      rides: userRides
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ msg: "Error", err });
-  }
-});
+//     res.json({
+//       rides: userRides
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ msg: "Error", err });
+//   }
+// });
 
 // http://localhost:3001/rides/getAllRidesByStatus/:status
 router.get("/getAllRidesByStatus/:status", auth, async (req, res) => {
