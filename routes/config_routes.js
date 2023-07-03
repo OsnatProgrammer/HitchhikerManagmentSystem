@@ -6,6 +6,7 @@ const rideDetailsR = require("./rideDetails")
 const ridesR = require("./rides")
 const messagesR = require("./messages")
 const algorithmR = require("./algorithm")
+const uploadR = require("./upload");
 
 
 exports.routesInit = (app) => {
@@ -17,6 +18,8 @@ exports.routesInit = (app) => {
     app.use("/rides", ridesR);
     app.use("/messages", messagesR);
     app.use("/algorithm", algorithmR);
+    app.use("/upload", uploadR);
+    
 }
 
 

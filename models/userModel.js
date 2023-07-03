@@ -9,6 +9,7 @@ let userSchema = new mongoose.Schema({
   password: String,
   address: String,
   gender: String,
+  img_url:String,
   status: {
     type: Boolean, default: true
   },
