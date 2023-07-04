@@ -208,4 +208,29 @@ router.patch("/updateStatus/:id", async (req, res) => {
     }
 });
 
+// http://localhost:3001/rideoffers/getAllridesoffersOpen
+router.get("/getAllridesoffersOpen", async (req, res) => {
+    // let sort = req.query.sort || "_id";
+    try {
+        let ar_rideoffers = [];
+        let rideoffers = await RideOfferModel.find({})
+        for (let i = 0; i < rideoffers.length; i++) {
+            let detailsOffer = await RideDetailsModel.findById(rideoffers[i].rideDetails_id);
+            // .sort({ [sort]: reverse });
+            if (detailsOffer.status === 0) {
+                const rideData = {
+                    ride_offer: rideoffers[i],
+                    details_offer: detailsOffer,
+                };
+                ar_rideoffers.push(rideData);
+            }
+        }
+        res.json({ ar_rideoffers });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Error", err });
+    }
+});
+
 module.exports = router;
