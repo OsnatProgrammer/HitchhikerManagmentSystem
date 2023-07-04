@@ -175,4 +175,29 @@ router.delete("/:idDel", auth, async (req, res) => {
   }
 })
 
+// update user
+// http://localhost:3001/users/:id
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUser = req.body;
+    console.log(req.body.password)
+    
+    
+    // Find the user by ID and update the user document
+    const user = await UserModel.findByIdAndUpdate(userId, updatedUser, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Return the updated user
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
+
 module.exports = router;
