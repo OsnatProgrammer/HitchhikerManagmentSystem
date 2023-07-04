@@ -128,6 +128,23 @@ router.patch("/updateStatus/:id", async (req, res) => {
   }
 });
 
+
+// http://localhost:3001/users/updateImage/:id
+router.patch("/updateImage/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const newImage = req.body.imageUrl;
+
+    let data = await UserModel.updateOne({ _id: userId }, { imageUrl: newImage });
+
+    res.json(data);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
 //delete by userId
 //http://localhost:3001/users/:idDel
 router.delete("/:idDel", auth, async (req, res) => {

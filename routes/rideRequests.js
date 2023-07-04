@@ -31,16 +31,19 @@ const router = express.Router();
 //     }
 // });
 
-// http://localhost:3001/rideRequests/getAllridesRequestsOpen
-router.get("/getAllridesRequestsOpen", async (req, res) => {
+// http://localhost:3001/rideRequests/getAllridesRequestsOpenDifferentId
+router.get("/getAllridesRequestsOpenDifferentId", auth, async (req, res) => {
     // let sort = req.query.sort || "_id";
+    const userId = req.tokenData._id;
+    console.log(userId);
+
     try {
         let ar_rideRequests = [];
         let rideRequests = await RideRequestModel.find({})
         for (let i = 0; i < rideRequests.length; i++) {
             let detailsRequest = await RideDetailsModel.findById(rideRequests[i].rideDetails_id);
-            // .sort({ [sort]: reverse });
-            if (detailsRequest.status === 0) {
+
+            if (detailsRequest.status === 0 && rideRequests[i].user_id != userId) {
                 const rideData = {
                     ride_request: rideRequests[i],
                     details_request: detailsRequest,
@@ -55,16 +58,18 @@ router.get("/getAllridesRequestsOpen", async (req, res) => {
         res.status(500).json({ msg: "Error", err });
     }
 });
-// http://localhost:3001/rideRequests/getAllridesRequestsOpenById
-router.get("/getAllridesRequestsOpenById", auth,async (req, res) => {
+
+// http://localhost:3001/rideRequests/getAllRidesRequestsOpenById
+router.get("/getAllRidesRequestsOpenById", auth, async (req, res) => {
     const userId = req.tokenData._id;
+    console.log(userId);
+
     try {
         let ar_rideRequests = [];
         let rideRequests = await RideRequestModel.find({})
         for (let i = 0; i < rideRequests.length; i++) {
             let detailsRequest = await RideDetailsModel.findById(rideRequests[i].rideDetails_id);
-            // .sort({ [sort]: reverse });
-            if (detailsRequest.status === 0&&userId==rideRequests[i].user_id) {
+            if (detailsRequest.status === 0 && rideRequests[i].user_id == userId) {
                 const rideData = {
                     ride_request: rideRequests[i],
                     details_request: detailsRequest,
@@ -126,20 +131,23 @@ router.patch("/updateStatus", async (req, res) => {
     }
 });
 
-// http://localhost:3001/rideRequests/deleterideRequest/123 -> send token
-router.delete("/deleterideRequest/:idDel", async (req, res) => {
 
+// http://localhost:3001/rideoffers/deleterideRequest/123 -> send token
+router.delete("/deleterideRequest/:idDel", auth, async (req, res) => {
     try {
-        let idDel = req.params.idDel
-        let data = await RideRequestModel.deleteOne({ _id: idDel })
-        res.json(data);
+        let idDel = req.params.idDel;
+        console.log(idDel);
+        let RideRequestToRemove = await RideRequestModel.find({ _id: idDel, user_id: req.tokenData._id });
+        if (RideRequestToRemove) {
+            await RideDetailsModel.deleteOne({ _id: RideRequestToRemove[0].rideDetails_id });
+            await RideRequestModel.deleteOne({ _id: idDel, user_id: req.tokenData._id });
+        }
+        res.json(RideRequestToRemove);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "err", err });
     }
-
-    catch (err) {
-        console.log(err)
-        res.status(500).json({ msg: "err", err })
-    }
-})
+});
 
 router.patch("/updateStatus/:id", async (req, res) => {
     try {
