@@ -144,6 +144,7 @@ router.patch("/updateImage/:id", async (req, res) => {
   try {
     const userId = req.params.id;
     const newImage = req.body.imageUrl;
+    console.log(newImage);
 
     let data = await UserModel.updateOne({ _id: userId }, { imageUrl: newImage });
 
