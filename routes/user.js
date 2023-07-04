@@ -4,10 +4,20 @@ const bcrypt = require("bcrypt");
 const { auth, authadmin } = require("../middlewares/auth");
 const { UserModel, validUser, validLogin, createToken } = require("../models/userModel")
 const jwt = require("jsonwebtoken");
-// const { config } = require("dotenv");
 const { config } = require("../config/secret");
 
-//get user list for user admin
+
+router.get("/", async (req, res) => {
+
+  try {
+    res.json({msg:"user working!!"})
+  }
+  catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: "err", err })
+  }
+})
+
 //http://localhost:3001/users/usersList
 router.get("/usersList", authadmin, async (req, res) => {
   let sort = req.query.sort || "name";
