@@ -4,10 +4,20 @@ const bcrypt = require("bcrypt");
 const { auth, authadmin } = require("../middlewares/auth");
 const { UserModel, validUser, validLogin, createToken } = require("../models/userModel")
 const jwt = require("jsonwebtoken");
-// const { config } = require("dotenv");
 const { config } = require("../config/secret");
 
-//get user list for user admin
+
+router.get("/", async (req, res) => {
+
+  try {
+    res.json({msg:"user working!!"})
+  }
+  catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: "err", err })
+  }
+})
+
 //http://localhost:3001/users/usersList
 router.get("/usersList", authadmin, async (req, res) => {
   let sort = req.query.sort || "name";
@@ -165,5 +175,30 @@ router.delete("/:idDel", auth, async (req, res) => {
     res.status(500).json({ msg: "err", err })
   }
 })
+
+// update user
+// http://localhost:3001/users/:id
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUser = req.body;
+    console.log(req.body.password)
+    
+    
+    // Find the user by ID and update the user document
+    const user = await UserModel.findByIdAndUpdate(userId, updatedUser, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Return the updated user
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error", err });
+  }
+});
+
 
 module.exports = router;
